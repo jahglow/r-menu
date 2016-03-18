@@ -1,0 +1,33 @@
+{
+  "name": "r-admin-menu",
+  "version": "1.0.0",
+  "authors": [
+    "John Archer <jahglow@gmail.com>"
+  ],
+  "description": "A handy admin-menu transformer",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "r-admin-menu.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#1.0.0",
+    "paper-item": "PolymerElements/paper-item#1.0.0",
+    "paper-listbox": "polymerelements/paper-listbox#1.0.0",
+    "paper-menu-button": "PolymerElements/paper-menu-button#1.0.0",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^1.0.9"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0"
+  }
+}

@@ -1,0 +1,165 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
+
+
+<!--
+An element that helps to create a simple to use admin-menu in material design.
+
+Example:
+
+    <r-admin-menu>
+      <confirmit:wysiwygcomponent type="AdminMenu" id="38763a11-ad5b-453b-9653-7522bc676af0" />
+    </r-admin-menu>
+
+@group Reportal Elements
+@element r-admin-menu
+@demo demo/index.html
+-->
+
+
+<iron-iconset-svg size="24" name="r-admin-menu-icons">
+  <svg><defs>
+    <g id="settings"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></g>
+  </defs></svg>
+</iron-iconset-svg>
+
+<dom-module id="r-admin-menu">
+
+  <style>
+    :host {
+      display: inline-block;
+      position: relative;
+      box-sizing: border-box;
+      outline: none;
+      @apply(--r-admin-menu-button);
+    }
+    :host ::content .reportal_hide_print{display:none !important}
+    :host paper-item {
+      cursor:pointer;
+    }
+  </style>
+
+  <template>
+    <content id="source"></content>
+    <paper-menu-button horizontal-offset$="[[horizontalOffset]]" vertical-offset$="[[verticalOffset]]" horizontal-align$="[[horizontalAlign]]" vertical-align$="[[verticalAlign]]" no-animations$="[[noAnimations]]">
+      <paper-icon-button icon$="[[icon]]" class="dropdown-trigger"></paper-icon-button>
+      <paper-listbox class="dropdown-content" attr-for-selected="index">
+        <template is="dom-repeat" items$="[[data]]">
+          <paper-item index$="[[index]]">{{item.label}}</paper-item>
+        </template>
+      </paper-listbox>
+    </paper-menu-button>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'r-admin-menu',
+    listeners:{
+      'iron-select':'_processClick'
+    },
+
+    properties: {
+
+      /**
+       * A pixel value that will be added to the position calculated for the
+       * given `horizontalAlign`. Use a negative value to offset to the
+       * left, or a positive value to offset to the right.
+       */
+      horizontalOffset: {
+        type: Number,
+        value: 0,
+        notify: true
+      },
+      /**
+       * A pixel value that will be added to the position calculated for the
+       * given `verticalAlign`. Use a negative value to offset towards the
+       * top, or a positive value to offset towards the bottom.
+       */
+      verticalOffset: {
+        type: Number,
+        value: 0,
+        notify: true
+      },
+      /**
+       * Set to true to disable animations when opening and closing the
+       * dropdown.
+       */
+      noAnimations: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * The orientation against which to align the menu dropdown
+       * horizontally relative to the dropdown trigger.
+       */
+      horizontalAlign: {
+        type: String,
+        value: 'right',
+        reflectToAttribute: true
+      },
+
+      /**
+       * The orientation against which to align the menu dropdown
+       * vertically relative to the dropdown trigger.
+       */
+      verticalAlign: {
+        type: String,
+        value: 'top',
+        reflectToAttribute: true
+      },
+
+      /**
+       * Override default icon
+       * */
+      icon:{
+        type:String,
+        value: 'r-admin-menu-icons:settings'
+      },
+      /**
+       * A computed Array from admin-menu in light-DOM
+       * @type {[{action: String, label: String}]} data
+       * */
+      data:{
+        type:Array,
+        value:function(){return []},
+        readOnly:true,
+        notify:true
+      }
+    },
+
+    // Element Lifecycle
+    ready:function(){
+      var source = this.getContentChildren('#source')[0].querySelector('ul');
+      if(source && source.children.length>0){
+        this._setData([].slice.call(source.children).map(function(li){return {action: li.children[0].getAttribute('href'), label: li.textContent.trim()}}));
+      }
+    },
+    /**
+     * executes action on a selected element
+     * @method _processClick
+     * @param {CustomEvent} event iron-select event
+     * */
+    _processClick:function(event){
+      return eval(this.data[parseInt(event.detail.item.getAttribute('index'))].action);
+    }
+
+  });
+
+</script>
