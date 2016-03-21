@@ -1,0 +1,359 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-styles/default-theme.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-menu/paper-submenu.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+
+
+<!--
+`r-menu` is an element to wrap around standard Reportal Navigator and make it an expandable side menu, one-level top-menu or both.
+
+Example:
+
+     <r-menu icons-legacy="polymer warning settings" layout="mixed">
+       <confirmit:wysiwygcomponent type="Navigator" id="a2f84de1-2b19-4ba8-8d4c-9edbfa1349c8" />
+     </r-menu>
+
+The best practice for now is to have the first instance of `r-menu` get the data at Report Master...
+
+    <r-menu data-provider data="{{reportalNavigator}}">
+      <confirmit:wysiwygcomponent type="Navigator" id="a2f84de1-2b19-4ba8-8d4c-9edbfa1349c8" />
+    </r-menu>
+
+...and transfer it to Page Master where the layout scaffolding is defined.
+
+    <r-menu icons-legacy="polymer warning settings" layout="mixed" data="{{reportalNavigator}}"></r-menu>
+
+>> _NOTE:_ if you provide icons via `icons` or `icons-legacy` other than from `iron-icons` icon-set, make sure you import icon-files as well.
+
+### Styling
+
+The following custom properties and mixins are also available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--r-menu-item` | Mixin applied to the look of a single item | `{}`
+`--r-menu-item-focused` | Mixin applied to the look of a focused item | `{}`
+`--r-menu-expand-icon` | Mixin applied to the look of the expand chevron on nested menus | `{}`
+`--r-menu-toplevel-border` | Mixin applied to separating border on top-level items | `{}`
+`--r-menu-nested` | Mixin for nested menus | `{}`
+
+@group Reportal Elements
+@element r-menu
+@demo demo/r-menu.html
+-->
+
+
+<dom-module id="r-menu">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+        margin-left:0px !important;
+      }
+      :host paper-icon-item>iron-icon.expand-icon{
+        margin-right:0 !important;
+        @apply(--end-justify);
+        @apply(--r-menu-expand-icon);
+      }
+      :host .paper-submenu>paper-icon-item {
+        @apply(--layout-horizontal);
+      }
+      :host paper-icon-item {
+        font-size: 14px;
+        font-weight: normal;
+        line-height:32px;
+        vertical-align:middle;
+        cursor:pointer;
+        padding: 0 16px 0 16px;
+        @apply(--r-menu-item);
+      }
+      :host .selectable-content.paper-menu > *:focus:after {
+        background:transparent;
+        @apply(--r-menu-item-focused);
+      }
+      :host paper-icon-item {
+        --paper-item-icon-width:40px;
+      }
+      :host paper-icon-item[noicon] {
+        --paper-item-icon-width:0px;
+      }
+      :host paper-icon-item iron-icon{
+        --iron-icon-fill-color: var(--default-primary-color, #000);
+        opacity:0.6;
+      }
+      :host paper-icon-item div.flex{@apply(--layout-flex)}
+      :host paper-menu paper-menu paper-icon-item {
+        --paper-item-icon-width:0;
+      }
+      :host .paper-submenu>paper-icon-item {
+        @apply(--layout-flex);
+      }
+      :host  paper-menu paper-menu paper-icon-item {
+        padding-left:24px;
+        @apply(--r-menu-nested);
+      }
+
+      :host paper-menu paper-menu paper-menu paper-icon-item {
+        padding-left:32px;
+        @apply(--r-menu-nested);
+      }
+
+      :host>paper-menu paper-submenu:not(:first-child) .menu-trigger, :host>paper-menu paper-icon-item:not(:first-child){
+        border-top:1px solid #ededed;
+        @apply(--r-menu-toplevel-border);
+      }
+      :host>paper-menu paper-menu  paper-submenu .menu-trigger, :host>paper-menu paper-menu paper-icon-item {border-top:0}
+      :host ::content .yui3-menu{display:none !important}
+
+    </style>
+    <content></content>
+    <template id="submenu">
+      <paper-submenu>
+        <paper-icon-item class="menu-trigger" noicon$="[[!data.icon]]" id$="[[data.id]]">
+          <iron-icon icon$="[[data.icon]]" item-icon></iron-icon>
+          <div class="flex">{{data.label}}</div>
+          <iron-icon icon="expand-more" class="expand-icon"></iron-icon>
+        </paper-icon-item>
+        <paper-menu class="menu-content" attr-for-selected="id" >
+        </paper-menu>
+      </paper-submenu>
+    </template>
+    <template id="item">
+      <paper-icon-item onclick$="[[data.action]]" noicon$="[[!data.icon]]" id$="[[data.id]]"><iron-icon icon$="[[data.icon]]" item-icon></iron-icon>{{data.label}}</paper-icon-item>
+    </template>
+    <template id="tabs">
+      <template is="dom-repeat" items="[[data]]">
+        <paper-tab id$="[[item.id]]" onclick$="[[item.action]]">{{item.label}}</paper-tab>
+      </template>
+    </template>
+
+  </template>
+</dom-module>
+<script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'r-menu',
+      behaviors:[Polymer.Templatizer],
+      properties: {
+        /**
+         * String of space-delimited icons for Reportal legacy compatibility
+         * */
+        iconsLegacy:String,
+        /**
+         * Array of icon names
+         * */
+        icons:{
+          type:Array,
+          value:function(o){
+            return (o.iconsLegacy && o.iconsLegacy.length>0)? o.iconsLegacy.split(' ') :  [];
+          }
+        },
+        /**
+         * CSS selector of an HTMLElement to render tabs to if `layout` === ('tabs' || 'mixed')
+         * */
+        renderTabsTo:{
+          type:String,
+          value:''
+        },
+        /**
+         * Defines menu layout. Available layout modes are:
+         * - `vertical` renders the menu vertically with an unlimited number of nested levels (subfolders) which expand/collapse on click and have an icon indicating that the level has children to the right of the label.
+         * - `tabs` renders the menu as tabs, preferably in the header of the main content. Tabs are scrollable by default and by design to support long on-level menus. Tabs will disregard any nested children of a menu item and will not drop-down.
+         * - `mixed` renders a single-level vertical menu when called in a sidebar and the second level of each child is rendered in the header of main content area (though the CSS reference must be declared in `renderTabsTo`, otherwise tabs will be rendered right where the vertical menu is placed)
+         * */
+        layout:{
+          type:String,
+          value:'vertical'
+        },
+        /**
+         * Number of efforts to look up the HTMLElement defined in `renderTabsTo`
+         * */
+        _extRenderLookup:{
+          type:Number,
+          value:5
+        },
+        /**
+         * Disables visual rendering of the menu and only notifies of its `data` array. Useful if the menu needs to be generated at Report Master and placed in Page Master's context via data-binding
+         * */
+        dataProvider:{
+          type:Boolean,
+          value:false
+        },
+        /**
+         * Array representation of menu data stripped of Reportal Navigator.
+         * @type {[{icon: String, id: String, label: String, action:String, submenu: Array}]} data
+         * */
+        data: {
+          type: Array,
+          notify: true,
+          observer: '_generateMenu',
+          value: function(){
+            var mArray = [];
+            function _iteration(items, obj){
+              if(items){
+                var liLength = items.children.length;
+                while(liLength--){//li items iteration
+                  var item = {}, curLi = items.children[liLength], curLiLength = curLi.children.length;
+                  item.id = window._UUID() || curLi.id; //assign a unique id to each element
+                  if(curLi.classList.contains('css-menu-child-selected') || curLi.classList.contains('css-menu-selected')){item.selected = true;}
+                  while(curLiLength--){ // li children iteration (a|div)
+                    var currentChild = curLi.children[curLiLength];
+                    if(currentChild.localName === 'a'){
+                      item.label = currentChild.textContent.trim(); //set up label
+                      if(currentChild.href.indexOf('#')<0){item.action = currentChild.href;} // set up page link
+                    }
+                    if(currentChild.localName === 'div'){
+                      item.submenu=[]; _iteration(Polymer.dom(currentChild).querySelector('ul'), item.submenu); //iterate over submenu
+                    }
+                  }
+                  obj.unshift(item);
+                }
+              }
+            }
+            var datasource = this.querySelector('div.yui3-menu ul');
+            if(datasource){
+              _iteration(datasource,mArray);
+              Polymer.dom(this).removeChild(Polymer.dom(this).querySelector('div.yui3-menu'));
+            }
+            return mArray;
+          }
+        }
+      },
+      /**
+       * Merges `icons` with `data` and launches menu rendering.
+       * */
+      _generateMenu:function(){
+        if(this.icons && this.data && this.data.length>0){ //merge icons with data
+          var di=this.data.length; while(di--){if(this.icons[di]){this.data[di].icon = this.icons[di]}}
+        }
+        if(!this.dataProvider && this.data && this.data.length>0) {
+          switch (this.layout) {
+            case 'vertical': this._vertical(); break;
+            case 'tabs': this._tabs(this.data, this.renderTabsTo);  break;
+            case 'mixed': this._mixed(); break;
+          }
+        }
+      },
+      /**
+       * Opens the submenu level
+       * */
+      _openSubmenus:function(opened){
+        if(opened && opened[0].hasOwnProperty('submenu')){
+          Polymer.dom(this.$$('[id="'+opened[0].id+'"]')).parentNode.toggle();
+          this._openSubmenus(opened[0].submenu.filter(function(item){return item.selected===true}));
+        }
+      },
+      /**
+       * Renders mixed menu from a template
+       * */
+      _mixed:function(){
+        var menu = document.createElement('paper-menu');
+        menu.addEventListener('iron-select',this._renderTabs);
+        menu.attrForSelected = 'id';
+        this.data.forEach(function(item){
+          this.templatize(this.$.item);
+          var instance = this.stamp({});
+          instance.data = item;
+          if(item.selected){
+            menu.selected=item.id;
+          }
+          Polymer.dom(menu).appendChild(instance.root);
+        }.bind(this));
+        Polymer.dom(this.root).appendChild(menu);
+      },
+      /**
+       * Renders tabs from a template
+       * @method _tabs
+       * @param {Array} data Array of objects from `data` per tabs-row
+       * @param {String} renderTo CSS selector of an HTMLElement to render tabs to
+       * */
+      _tabs:function(data, renderTo){
+        /* if we're asked to render to a node that isn't initialized yet
+         * we'll log for it 5*0.5 sec, else render to root*/
+        if(renderTo && !document.querySelector(renderTo)){
+          if(this._extRenderLookup>0){
+            this.async(function(){this._extRenderLookup--; this._tabs(data, renderTo);}, 500);
+          } else {
+            this._warn(this._logf('tabs','expired looking for '+renderTo+', will render tabs in-place')); this._tabs(data);
+          }
+        } else { // renderTo exists as an element => us it, if not specified => use this.root
+          var target; if(renderTo && renderTo.length>0){target = document.querySelector(renderTo); target.innerHTML = ''} else {target = this.root}
+          var menu = document.createElement('paper-tabs');
+          menu.attrForSelected = 'id'; menu.scrollable = true; menu.classList.add('flex');
+          this.templatize(this.$.tabs); var instance = this.stamp({}); instance.data = data || this.data;
+          var selectedTab = instance.data.filter(function (item) {return item.selected === true;});
+          if (selectedTab && selectedTab.length > 0 && selectedTab[0].id) {menu.selected = selectedTab[0].id;}
+          Polymer.dom(menu).appendChild(instance.root); Polymer.dom(target).appendChild(menu);
+        }
+      },
+      /**
+       * Renders vertical menu from a template.
+       * */
+      _vertical:function(){
+        var that = this;
+        var menu = document.createElement('paper-menu');
+        menu.attrForSelected = 'id';
+        var templatize = {
+          submenu: function(data,host){
+            this.templatize(that.$.submenu);
+            var instance = that.stamp({});
+            instance.data = data;
+            if(data.selected){host.selected = data.id; }
+            Polymer.dom(host).appendChild(instance.root);
+            data.submenu.forEach(function(sub){
+              templatize[sub.submenu?'submenu':'topItem'](sub, Polymer.dom(Polymer.dom(host).querySelector('[id="'+data.id+'"]')).parentNode.children.collapse.firstElementChild);
+            })
+          }.bind(this),
+          topItem:function(data,host){
+            this.templatize(this.$.item);
+            var instance = that.stamp({});
+            instance.data = data;
+            if(data.hasOwnProperty('selected')){host.selected = data.id}
+            Polymer.dom(host).appendChild(instance.root);
+          }.bind(this),
+          get lastMenu(){
+            return Polymer.dom(menu).querySelectorAll('paper-menu').reverse()[0];
+          }
+        };
+        for(var i=0;i<this.data.length;i++){
+          templatize[this.data[i].hasOwnProperty('submenu')?'submenu':'topItem'](this.data[i],menu);
+        }
+        Polymer.dom(this.root).appendChild(menu);
+        this._openSubmenus(this.data.filter(function(item){return item.selected===true}));
+      },
+      /**
+       * Renders tabs when receives an `iron-select` event from the first-level parent in a vertical menu.
+       * @method _renderTabs
+       * @param {CustomEvent} e an `iron-select` event received from the first-level parent in a vertical menu.
+       * */
+      _renderTabs:function(e){
+        var id = Polymer.dom(e).event.detail.item.id;
+        var host = Polymer.dom(e).localTarget.localName!=='r-menu'? Polymer.dom(e).path.filter(function(item){return item.localName==='r-menu'})[0] : Polymer.dom(e).localTarget;
+        if(id && host){
+          if(host.data && host.data.length>0){
+            var currentLevel = host.data.filter(function(item){return item.id===id});
+            if(currentLevel && currentLevel.length>0 && currentLevel[0].hasOwnProperty('submenu') && host.renderTabsTo){
+              host._tabs(currentLevel[0].submenu, host.renderTabsTo);
+            }
+          }
+        }
+      }
+    });
+  })();
+</script>

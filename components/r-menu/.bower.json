@@ -1,0 +1,47 @@
+{
+  "name": "r-menu",
+  "authors": [
+    "John Archer <jahglow@gmail.com>"
+  ],
+  "description": "A set of menu elements for Confirmit Reportal. `<r-menu>` is a wrapper for Reportal Navigator component and `<r-admin-menu>` is a handy standalone admin-menu wrapper that presents it as a paper-dropdown",
+  "keywords": [
+    "web-component",
+    "polymer"
+  ],
+  "main": "main-component.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/jahglow/r-menu/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "paper-menu-button": "PolymerElements/paper-menu-button#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#1.0.0",
+    "paper-item": "PolymerElements/paper-item#^1.0.0",
+    "paper-listbox": "polymerelements/paper-listbox#^1.0.0",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^1.0.9",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.0",
+    "paper-menu": "PolymerElements/paper-menu#^1.0.0",
+    "paper-tabs": "PolymerElements/paper-tabs#^1.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "paper-material": "PolymerElements/paper-material#^1.0.0"
+  },
+  "_release": "4688177e4e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "4688177e4ee0f403cfc058c2c3765bc9411d67cf"
+  },
+  "_source": "git://github.com/jahglow/r-menu.git",
+  "_target": "master",
+  "_originalSource": "jahglow/r-menu",
+  "_direct": true
+}
