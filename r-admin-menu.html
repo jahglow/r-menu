@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <!--
-An element that helps to create a simple to use admin-menu in material design.
+An element that helps to create a simple to use admin-menu in Material Design.
 
 Example:
 
@@ -24,9 +24,19 @@ Example:
       <confirmit:wysiwygcomponent type="AdminMenu" id="38763a11-ad5b-453b-9653-7522bc676af0" />
     </r-admin-menu>
 
+### Styling
+
+The following custom properties and mixins are also available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--r-admin-menu-button` | Mixin applied to the host element | `{}`
+
+`r-admin-menu` uses `paper-menu-button`, `paper-icon-button` and `paper-listbox`, so you can use corresponding Custom CSS properties to style their contents.
+
 @group Reportal Elements
 @element r-admin-menu
-@demo demo/index.html
+@demo demo/r-admin-menu.html
 -->
 
 
@@ -55,7 +65,7 @@ Example:
   <template>
     <content id="source"></content>
     <paper-menu-button horizontal-offset$="[[horizontalOffset]]" vertical-offset$="[[verticalOffset]]" horizontal-align$="[[horizontalAlign]]" vertical-align$="[[verticalAlign]]" no-animations$="[[noAnimations]]">
-      <paper-icon-button icon$="[[icon]]" class="dropdown-trigger" noink></paper-icon-button>
+      <paper-icon-button icon$="[[icon]]" class="dropdown-trigger"></paper-icon-button>
       <paper-listbox class="dropdown-content" attr-for-selected="index">
         <template is="dom-repeat" items$="[[data]]">
           <paper-item index$="[[index]]">{{item.label}}</paper-item>
