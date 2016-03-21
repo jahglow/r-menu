@@ -38,6 +38,8 @@ The best practice for now is to have the first instance of `r-menu` get the data
 
     <r-menu icons-legacy="polymer warning settings" layout="mixed" data="{{reportalNavigator}}"></r-menu>
 
+>> _NOTE:_ if you provide icons via `icons` or `icons-legacy` other than from `iron-icons` icon-set, make sure you import icon-files as well.
+
 ### Styling
 
 The following custom properties and mixins are also available for styling:
@@ -154,7 +156,7 @@ Custom property | Description | Default
          * */
         iconsLegacy:String,
         /**
-         * Array of icon-names
+         * Array of icon names
          * */
         icons:{
           type:Array,
@@ -163,7 +165,7 @@ Custom property | Description | Default
           }
         },
         /**
-         * CSS selector of an HTMLElement to render tabs to if layout == 'tabs' || 'mixed'
+         * CSS selector of an HTMLElement to render tabs to if `layout` === ('tabs' || 'mixed')
          * */
         renderTabsTo:{
           type:String,
