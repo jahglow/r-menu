@@ -55,7 +55,7 @@ Example:
   <template>
     <content id="source"></content>
     <paper-menu-button horizontal-offset$="[[horizontalOffset]]" vertical-offset$="[[verticalOffset]]" horizontal-align$="[[horizontalAlign]]" vertical-align$="[[verticalAlign]]" no-animations$="[[noAnimations]]">
-      <paper-icon-button icon$="[[icon]]" class="dropdown-trigger"></paper-icon-button>
+      <paper-icon-button icon$="[[icon]]" class="dropdown-trigger" noink></paper-icon-button>
       <paper-listbox class="dropdown-content" attr-for-selected="index">
         <template is="dom-repeat" items$="[[data]]">
           <paper-item index$="[[index]]">{{item.label}}</paper-item>
@@ -84,8 +84,7 @@ Example:
        */
       horizontalOffset: {
         type: Number,
-        value: 0,
-        notify: true
+        value: 0
       },
       /**
        * A pixel value that will be added to the position calculated for the
@@ -94,8 +93,7 @@ Example:
        */
       verticalOffset: {
         type: Number,
-        value: 0,
-        notify: true
+        value: 0
       },
       /**
        * Set to true to disable animations when opening and closing the
@@ -147,7 +145,7 @@ Example:
     // Element Lifecycle
     ready:function(){
       var source = this.getContentChildren('#source')[0].querySelector('ul');
-      if(source && source.children.length>0){
+      if(source && source.children.length>0){ /** creates `data` {[{action: String, label: String}]} */
         this._setData([].slice.call(source.children).map(function(li){return {action: li.children[0].getAttribute('href'), label: li.textContent.trim()}}));
       }
     },
