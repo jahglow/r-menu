@@ -59,6 +59,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </demo-snippet>
 
+  <!--h3>r-admin-menu data-provider -> receiver</h3>
+  <demo-snippet>
+    <template>
+      <r-admin-menu data-provider data="{{adminMenu}}">
+        <div class="reportal-admin reportal_hide_print">
+          <ul class="reportal-admin-list">
+            <li>
+              <a href="javascript:viewmode.reportList('/reportal/ReportList.aspx')" class="reportal-admin-reports">Report List</a>
+            </li>
+            <li>
+              <a href="javascript:SetPreferences()" class="reportal-admin-preferences">Preferences</a>
+            </li>
+            <li>
+              <a href="javascript:ExportReport()" class="reportal-admin-export">Export</a>
+            </li>
+            <li>
+              <a id="ctl03_logout" class="reportal-admin-logout" href='javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl03$logout", "", true, "", "", false, true))'>Log off</a>
+            </li>
+          </ul>
+        </div>
+      </r-admin-menu>
+      <r-admin-menu vertical-offset="65" title="Admin menu" data-input="{{adminMenu}}">
+      </r-admin-menu>
+    </template>
+  </demo-snippet-->
+
 </div>
 </body>
 </html>

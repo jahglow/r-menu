@@ -56,7 +56,7 @@ Custom property | Description | Default
       outline: none;
       @apply(--r-admin-menu-button);
     }
-    :host ::content .reportal_hide_print{display:none !important}
+    :host ::content .reportal_hide_print,:host [hidden] {display:none !important}
     :host paper-item {
       cursor:pointer;
     }
@@ -64,14 +64,14 @@ Custom property | Description | Default
 
   <template>
     <content id="source"></content>
-    <paper-menu-button horizontal-offset$="[[horizontalOffset]]" vertical-offset$="[[verticalOffset]]" horizontal-align$="[[horizontalAlign]]" vertical-align$="[[verticalAlign]]" no-animations$="[[noAnimations]]">
-      <paper-icon-button icon$="[[icon]]" class="dropdown-trigger"></paper-icon-button>
-      <paper-listbox class="dropdown-content" attr-for-selected="index">
-        <template is="dom-repeat" items$="[[data]]">
-          <paper-item index$="[[index]]">{{item.label}}</paper-item>
-        </template>
-      </paper-listbox>
-    </paper-menu-button>
+      <paper-menu-button hidden$="[[dataProvider]]" horizontal-offset$="[[horizontalOffset]]" vertical-offset$="[[verticalOffset]]" horizontal-align$="[[horizontalAlign]]" vertical-align$="[[verticalAlign]]" no-animations$="[[noAnimations]]">
+        <paper-icon-button icon$="[[icon]]" class="dropdown-trigger"></paper-icon-button>
+        <paper-listbox class="dropdown-content" attr-for-selected="index">
+          <template is="dom-repeat" items$="[[data]]">
+            <paper-item index$="[[index]]">{{item.label}}</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-menu-button>
   </template>
 
 </dom-module>
@@ -149,14 +149,24 @@ Custom property | Description | Default
         value:function(){return []},
         readOnly:true,
         notify:true
+      },
+      dataProvider:{
+        type:Boolean,
+        value:false
+      },
+      dataInput:{
+        type:Array,
       }
     },
 
     // Element Lifecycle
     ready:function(){
-      var source = this.getContentChildren('#source')[0].querySelector('ul');
+      var source = this.getContentChildren('#source')[0];
       if(source && source.children.length>0){ /** creates `data` {[{action: String, label: String}]} */
-        this._setData([].slice.call(source.children).map(function(li){return {action: li.children[0].getAttribute('href'), label: li.textContent.trim()}}));
+        this._setData([].slice.call(source.querySelector('ul').children).map(function(li){return {action: li.children[0].getAttribute('href'), label: li.textContent.trim()}}));
+      } else if (this.dataInput){
+        console.log(this.dataInput);
+        this._setData(this.dataInput)
       }
     },
     /**
