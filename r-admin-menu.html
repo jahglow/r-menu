@@ -156,17 +156,17 @@ Custom property | Description | Default
       },
       dataInput:{
         type:Array,
+        observer: '_propagateData'
       }
     },
-
+    _propagateData:function(data){
+      if(data && data.length>0){this._setData(data);}
+    },
     // Element Lifecycle
     ready:function(){
       var source = this.getContentChildren('#source')[0];
       if(source && source.children.length>0){ /** creates `data` {[{action: String, label: String}]} */
-        this._setData([].slice.call(source.querySelector('ul').children).map(function(li){return {action: li.children[0].getAttribute('href'), label: li.textContent.trim()}}));
-      } else if (this.dataInput){
-        console.log(this.dataInput);
-        this._setData(this.dataInput)
+      this._setData([].slice.call(source.querySelector('ul').children).map(function(li){return {action: li.children[0].getAttribute('href'), label: li.textContent.trim()}}));
       }
     },
     /**
